@@ -1,0 +1,45 @@
+---
+title: "Week 5 Assignments"
+author: "Laura Fisher"
+date: "2026-09-22"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r}
+setwd("~/OneDrive - Adelphi University/Bio 620 Datasets")
+```
+
+```{r}
+#Argiope 
+spiders <- read.csv("Argiope_fertilization_small.csv", header = TRUE)
+#response variable: number of fertilized eggs
+#explanatory variable: insertion time 
+#covariates: male size, female size, eggs laid, and egg sacs produced
+
+model <- lm(data = spiders, NumFertilized ~ InsertionDuration + MaleSize + FemaleSize + NumSacs + NumEggs)
+summary(model)
+# significant model! p=1.536e-14 overall and specifically both insertion duration and number of eggs are significant predictors (p = 0.008 and 4.09e-6 respectively). Insertion duration interesting appears to have a negative relationship with number of eggs fertilized while number of eggs understandably has a direct positive relationship with number fertilized (per the estimate ~ efect size ish) 
+#adjusted R^2 = 0.6877, which is a decent correlation coefficient and fit for a model of this nature
+
+plot(spiders$InsertionDuration, spiders$NumFertilized, pch = 20, col = "lightblue")
+```
+
+```{r}
+#Quine
+quine <- read.csv("quine.csv", header = TRUE)
+#response variable: number of days absent (Days)
+#explanatory variables: Ethnicity (Eth), Sex, Age, or Learner Status (Lrn)
+
+model2 <- aov(Days ~ Eth + Sex + Age + Lrn, data = quine)
+summary(model2)
+#this summary does not give an overall p-value for model significance, but we can see from the ANOVA that ethnicity is highly significant as a predictor for absences (p = 0.000466), and Age also was significant (p = 0.031). 
+#I don't immediately see anything from this summary that would indicate what kind of relationship these explanatory variables have with the response variable though.
+
+#Tukey’s Honest Significant Differences
+TukeyHSD(model2)
+#based on this output, Ethnicity still appears to be highly significant with the difference between N and A ethnicities p = 0.0004658. Within age the only significant difference is between F2 and F1 (p = 0.0450841), while the other Age categories do not have significant differences in absences. 
+#This is where you can find effect size/relationship information as "diff" as well as the 95% CI bounds. Not sure if I would be accurate in interpreting this as absences decreasing in ethnicity A compared to ethnicity N ??
+```
+
